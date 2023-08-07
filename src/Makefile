@@ -38,7 +38,7 @@ NVCUFLAGS  := -ccbin $(CXX) $(NVCC_GENCODE) -std=c++11
 CXXFLAGS   := -std=c++11
 
 LDFLAGS    := -L${CUDA_LIB} -lcudart -lrt
-NVLDFLAGS  := -L${CUDA_LIB} -l${CUDARTLIB} -lrt
+NVLDFLAGS  := -L$(NCCL_HOME)/lib -Xlinker=-rpath,$(NCCL_HOME)/lib $(NVLDFLAGS)
 
 ifeq ($(DEBUG), 0)
 NVCUFLAGS += -O3 -g
@@ -70,7 +70,7 @@ ifeq ($(MPI_IBM),1)
 NVCUFLAGS += -DMPI_SUPPORT
 NVLDFLAGS += -lmpi_ibm
 endif
-LIBRARIES += nccl
+LIBRARIES += nccl stdc++ m
 NVLDFLAGS += $(LIBRARIES:%=-l%)
 
 DST_DIR := $(BUILDDIR)
